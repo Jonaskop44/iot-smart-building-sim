@@ -6,7 +6,6 @@ from lib import config, mqtt_client
 from lib.devices import SensorType, get_device
 from lib.messages import QOS_DATA, sensor_message, sensor_topic
 
-
 def measure(device):
     if device.type == SensorType.DOOR:
         return "open" if random.random() < 0.2 else "closed"
