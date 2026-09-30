@@ -1,5 +1,5 @@
-# Gemeinsame Einstellungen für alle Sensoren (wird unten mit <<: *sensor eingefügt)
-x-sensor: &sensor
+# Gemeinsame Einstellungen für Sensoren und Controller (wird unten mit <<: *app eingefügt)
+x-app: &app
   build: .
   image: smartbuilding
   env_file: .env
@@ -18,22 +18,27 @@ services:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - ./mosquitto/data:/mosquitto/data
 
+  controller:
+    <<: *app
+    container_name: controller
+    command: python controller.py
+
   sensor-wohnzimmer:
-    <<: *sensor
+    <<: *app
     container_name: sensor-wohnzimmer
     command: python simulator.py zb-temp-wohnzimmer
 
   sensor-serverraum:
-    <<: *sensor
+    <<: *app
     container_name: sensor-serverraum
     command: python simulator.py zb-temp-serverraum
 
   sensor-garten:
-    <<: *sensor
+    <<: *app
     container_name: sensor-garten
     command: python simulator.py lora-soil-garten
 
   sensor-eingang:
-    <<: *sensor
+    <<: *app
     container_name: sensor-eingang
     command: python simulator.py ble-door-eingang

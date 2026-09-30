@@ -4,12 +4,15 @@ from paho.mqtt.enums import CallbackAPIVersion
 from lib import config
 from lib.messages import QOS_STATE
 
-def connect(client_id, status_topic):
+def connect(client_id, status_topic, subscribe=None, on_message=None):
     client = mqtt.Client(CallbackAPIVersion.VERSION2, client_id=client_id)
     client.will_set(status_topic, "offline", qos=QOS_STATE, retain=True)
+    client.on_message = on_message
 
     def on_connect(*_):
         client.publish(status_topic, "online", qos=QOS_STATE, retain=True)
+        if subscribe:
+            client.subscribe(subscribe)
 
     client.on_connect = on_connect
 
