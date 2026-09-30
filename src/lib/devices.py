@@ -20,10 +20,10 @@ class Device:
         self.start = start
 
 DEVICES = [
-    Device("zb-temp-wohnzimmer", Protocol.ZIGBEE, "wohnzimmer", SensorType.TEMPERATURE, "°C", 21),
-    Device("zb-temp-serverraum", Protocol.ZIGBEE, "serverraum", SensorType.TEMPERATURE, "°C", 24),
-    Device("lora-soil-garten", Protocol.LORAWAN, "garten", SensorType.SOIL_MOISTURE, "%", 45),
-    Device("ble-door-eingang", Protocol.BLE, "eingang", SensorType.DOOR, "", "closed"),
+    Device("Wohnzimmer-Temperatur", Protocol.ZIGBEE, "wohnzimmer", SensorType.TEMPERATURE, "°C", 21),
+    Device("Serverraum-Temperatur", Protocol.ZIGBEE, "serverraum", SensorType.TEMPERATURE, "°C", 30),
+    Device("Garten-Luftfeuchtigkeit", Protocol.LORAWAN, "garten", SensorType.SOIL_MOISTURE, "%", 40),
+    Device("Eingangstür", Protocol.BLE, "eingang", SensorType.DOOR, "", "closed"),
 ]
 
 def get_device(device_id):

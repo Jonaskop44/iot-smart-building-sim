@@ -2,12 +2,15 @@ name: CI/CD
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 jobs:
-  # Stufe 1: Unit-Tests ausführen (ohne Broker)
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, windows]
+    defaults:
+      run:
+        shell: powershell
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -17,32 +20,35 @@ jobs:
       - name: Tests
         run: pytest -v
 
-  # Stufe 2: Nur wenn Stufe 1 grün ist -> Container bauen, starten und prüfen
   deploy:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, windows]
+    defaults:
+      run:
+        shell: powershell
     steps:
       - uses: actions/checkout@v4
-      - run: cp .env.example .env
+      - run: Copy-Item .env.example .env -Force
 
       - name: Container bauen und starten
         run: docker compose up -d --build
 
       - name: Alle Geräte und der Controller melden "online"
         run: |
-          sleep 5
-          docker exec mqtt-broker mosquitto_sub -v -W 3 \
-            -t 'building/sensors/+/+/+/status' -t 'building/controller/status' | tee status.txt || true
-          test "$(grep -c ' online$' status.txt)" -eq 5
+          Start-Sleep -Seconds 5
+          $status = docker exec mqtt-broker mosquitto_sub -v -W 3 -t 'building/sensors/+/+/+/status' -t 'building/controller/status'
+          $status | Write-Host
+          $online = @($status | Select-String ' online$').Count
+          if ($online -ne 5) { Write-Error "Erwartet 5 x online, gefunden: $online"; exit 1 }
 
       - name: Hitzealarm -> Klimaanlage schaltet ein
         run: |
           docker compose stop sensor-serverraum
           docker exec mqtt-broker mosquitto_pub -t building/sensors/zigbee/serverraum/temperature/data -m 35
-          sleep 1
-          docker exec mqtt-broker mosquitto_sub -C 1 -W 3 \
-            -t building/actuators/serverraum/klimaanlage/state | tee state.txt
-          grep '"state": "ON"' state.txt
+          Start-Sleep -Seconds 1
+          $state = docker exec mqtt-broker mosquitto_sub -C 1 -W 3 -t building/actuators/serverraum/klimaanlage/state
+          $state | Write-Host
+          if (-not ($state | Select-String -SimpleMatch '"state": "ON"')) { Write-Error "Klimaanlage ist nicht ON"; exit 1 }
 
       - name: Logs anzeigen
         if: always()

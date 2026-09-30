@@ -12,9 +12,9 @@ class Rule:
 
 # Neue Regel = eine neue Zeile: Sensor, Bedingung, Raum und Aktor
 RULES = [
-    Rule("zb-temp-serverraum", lambda v: v > config.SERVERROOM_TEMP_MAX, "serverraum", "klimaanlage"),
-    Rule("lora-soil-garten", lambda v: v < config.SOIL_MOISTURE_MIN, "garten", "bewaesserung"),
-    Rule("ble-door-eingang", lambda v: v == "open", "eingang", "alarm"),
+    Rule("Serverraum-Temperatur", lambda v: v > config.SERVERROOM_TEMP_MAX, "serverraum", "klimaanlage"),
+    Rule("Garten-Luftfeuchtigkeit", lambda v: v < config.SOIL_MOISTURE_MIN, "garten", "bewaesserung"),
+    Rule("Eingangstür", lambda v: v == "open", "eingang", "alarm"),
 ]
 
 # Gibt für jede Regel, die zum Topic passt, (Regel, an/aus) zurück

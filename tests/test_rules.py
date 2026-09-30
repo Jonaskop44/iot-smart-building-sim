@@ -6,7 +6,6 @@ WOHNZIMMER = "building/sensors/zigbee/wohnzimmer/temperature/data"
 GARTEN = "building/sensors/lorawan/garten/soil_moisture/data"
 EINGANG = "building/sensors/ble/eingang/door/data"
 
-# Hilfsfunktion: welche Aktoren würden wie geschaltet? z. B. [("klimaanlage", True)]
 def switched(topic, value):
     return [(rule.actuator, on) for rule, on in evaluate(topic, value)]
 
@@ -37,7 +36,6 @@ def test_sensor_ohne_regel_schaltet_nichts():
 def test_ungueltiger_wert_wird_ignoriert():
     assert switched(SERVERRAUM, "abc") == []
 
-# monkeypatch ändert den Schwellwert nur für diesen Test (wie ein anderer Wert in der .env)
 def test_geaenderter_schwellwert_wird_verwendet(monkeypatch):
     monkeypatch.setattr(config, "SERVERROOM_TEMP_MAX", 20)
     assert switched(SERVERRAUM, 24) == [("klimaanlage", True)]

@@ -3,7 +3,7 @@ from lib.devices import get_device
 from lib.messages import actuator_message, actuator_topic, read_value, sensor_message, sensor_topic
 
 def test_sensor_topic_enthaelt_protokoll_raum_und_typ():
-    device = get_device("zb-temp-serverraum")
+    device = get_device("Serverraum-Temperatur")
     assert sensor_topic(device, "data") == "building/sensors/zigbee/serverraum/temperature/data"
     assert sensor_topic(device, "status") == "building/sensors/zigbee/serverraum/temperature/status"
 
@@ -11,8 +11,8 @@ def test_actuator_topic():
     assert actuator_topic("serverraum", "klimaanlage") == "building/actuators/serverraum/klimaanlage/state"
 
 def test_sensor_message_ist_json():
-    data = json.loads(sensor_message(get_device("zb-temp-serverraum"), 24.3))
-    assert data["device_id"] == "zb-temp-serverraum"
+    data = json.loads(sensor_message(get_device("Serverraum-Temperatur"), 24.3))
+    assert data["device_id"] == "Serverraum-Temperatur"
     assert data["value"] == 24.3
     assert data["unit"] == "°C"
     assert "ts" in data
