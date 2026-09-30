@@ -1,0 +1,5 @@
+.venv
+.env
+.git
+mosquitto/data
+**/__pycache__

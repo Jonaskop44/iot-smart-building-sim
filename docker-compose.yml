@@ -1,3 +1,13 @@
+# Gemeinsame Einstellungen für alle Sensoren (wird unten mit <<: *sensor eingefügt)
+x-sensor: &sensor
+  build: .
+  image: smartbuilding
+  env_file: .env
+  environment:
+    MQTT_HOST: mqtt-broker
+  depends_on:
+    - mqtt-broker
+
 services:
   mqtt-broker:
     image: eclipse-mosquitto:2.0
@@ -7,3 +17,23 @@ services:
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - ./mosquitto/data:/mosquitto/data
+
+  sensor-wohnzimmer:
+    <<: *sensor
+    container_name: sensor-wohnzimmer
+    command: python simulator.py zb-temp-wohnzimmer
+
+  sensor-serverraum:
+    <<: *sensor
+    container_name: sensor-serverraum
+    command: python simulator.py zb-temp-serverraum
+
+  sensor-garten:
+    <<: *sensor
+    container_name: sensor-garten
+    command: python simulator.py lora-soil-garten
+
+  sensor-eingang:
+    <<: *sensor
+    container_name: sensor-eingang
+    command: python simulator.py ble-door-eingang

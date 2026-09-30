@@ -1,3 +1,4 @@
+import time
 import paho.mqtt.client as mqtt
 from paho.mqtt.enums import CallbackAPIVersion
 from lib import config
@@ -14,6 +15,8 @@ def connect(client_id, status_topic):
 
     client.connect_async(config.MQTT_HOST, config.MQTT_PORT, config.MQTT_KEEPALIVE)
     client.loop_start()
+    while not client.is_connected():
+        time.sleep(0.1)
     return client
 
 def disconnect(client, status_topic):
