@@ -1,18 +1,10 @@
 import json
 from datetime import datetime, timezone
 
-# Topic-Schema:
-#   building/sensors/<protokoll>/<raum>/<typ>/data     Messwert
-#   building/sensors/<protokoll>/<raum>/<typ>/status   online / offline (Last Will)
-#   building/actuators/<raum>/<aktor>/state            Aktor-Zustand
-#   building/controller/status                         online / offline (Last Will)
-
-QOS_DATA = 0  # Messwerte: kommen ständig, ein verlorener Wert ist egal
-QOS_STATE = 1  # Status und Aktoren: müssen sicher ankommen
-
-SENSOR_DATA_SUBSCRIPTION = "building/sensors/+/+/+/data"  # "+" = genau eine Ebene
+QOS_DATA = 0  
+QOS_STATE = 1 
+SENSOR_DATA_SUBSCRIPTION = "building/sensors/+/+/+/data"
 CONTROLLER_STATUS_TOPIC = "building/controller/status"
-
 
 def sensor_topic(device, suffix):
     return f"building/sensors/{device.protocol}/{device.room}/{device.type}/{suffix}"
