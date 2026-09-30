@@ -6,6 +6,7 @@ from lib.rules import evaluate
 
 states = {}
 
+
 def on_message(client, _userdata, msg):
     value = read_value(msg.payload)
     for rule, on in evaluate(msg.topic, value):
