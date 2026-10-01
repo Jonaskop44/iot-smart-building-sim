@@ -37,6 +37,7 @@ jobs:
           $status | Write-Host
           $online = @($status | Select-String ' online$').Count
           if ($online -ne 5) { Write-Error "Erwartet 5 x online, gefunden: $online"; exit 1 }
+          exit 0
 
       - name: Hitzealarm -> Klimaanlage schaltet ein
         run: |
@@ -46,6 +47,7 @@ jobs:
           $state = docker exec mqtt-broker mosquitto_sub -C 1 -W 3 -t building/actuators/serverraum/klimaanlage/state
           $state | Write-Host
           if (-not ($state | Select-String -SimpleMatch '"state": "ON"')) { Write-Error "Klimaanlage ist nicht ON"; exit 1 }
+          exit 0
 
       - name: Logs anzeigen
         if: always()
