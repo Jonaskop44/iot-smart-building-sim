@@ -11,6 +11,7 @@ def measure(device):
         return "open" if random.random() < 0.2 else "closed"
     return round(device.start + random.uniform(-1.5, 1.5), 1)
 
+
 def main():
     device = get_device(sys.argv[1])
     data_topic = sensor_topic(device, "data")
